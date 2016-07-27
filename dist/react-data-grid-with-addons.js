@@ -66,7 +66,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+
 	/**
 	 * @jsx React.DOM
 
@@ -346,6 +346,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _selectedRows[rowIdx] = false;
 	      }
 	      this.setState({ selectedRows: _selectedRows });
+        if (this.props.onRowSelect) {
+	        this.props.onRowSelect(_selectedRows.filter(function (r) {
+	          return r.isSelected === true;
+	        }));
+	      }
 	    }
 	  },
 
@@ -5566,13 +5571,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		      // we update ignoreFocus to true if we change the scroll position so
 		      // the mouseover event triggered because of that won't have an
 		      // effect
-		      if (top < scroll) {
+		      /* if (top < scroll) {
 		        this.ignoreFocus = true;
 		        containerNode.scrollTop = top;
 		      } else if (bottom - scroll > height) {
 		        this.ignoreFocus = true;
 		        containerNode.scrollTop = bottom - height;
-		      }
+		      }*/
 		    }
 		  },
 
@@ -5738,7 +5743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+
 	/**
 	 * @jsx React.DOM
 	 */
@@ -5817,7 +5822,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+
 	// not including this
 	// it currently requires the whole of moment, which we dont want to take as a dependency
 	'use strict';
@@ -5912,7 +5917,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+
 	/**
 	* @jsx React.DOM
 
