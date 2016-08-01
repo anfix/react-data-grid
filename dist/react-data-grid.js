@@ -68,7 +68,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+
 	/**
 	 * @jsx React.DOM
 
@@ -344,26 +344,62 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _selectedRows = this.state.selectedRows.slice();
 	      if (_selectedRows[rowIdx] === null || _selectedRows[rowIdx] === false) {
 	        _selectedRows[rowIdx] = true;
+          this.handleGlobalCheckboxChange(e, _selectedRows);
 	      } else {
 	        _selectedRows[rowIdx] = false;
+          this.handleGlobalCheckboxChange(e, _selectedRows);
 	      }
 	      this.setState({ selectedRows: _selectedRows });
+        if (this.props.onRowSelect) {
+	        this.props.onRowSelect(_selectedRows);
+	      }
 	    }
 	  },
 
-	  handleCheckboxChange: function handleCheckboxChange(e) {
+	  handleCheckboxChange: function handleCheckboxChange(e, uncheckGlobal) {
+      e.stopPropagation();
 	    var allRowsSelected = undefined;
-	    if (e.currentTarget instanceof HTMLInputElement && e.currentTarget.checked === true) {
-	      allRowsSelected = true;
-	    } else {
-	      allRowsSelected = false;
-	    }
+      var container = e.currentTarget;
+      if (container.className === 'react-grid-checkbox') {
+        if (e.currentTarget.checked === true) {
+  	      allRowsSelected = true;
+  	    } else {
+  	      allRowsSelected = false;
+  	    }
+      }else if (container.className === 'react-grid-checkbox-container') {
+        var checkbox = e.currentTarget.childNodes[0];
+        if(checkbox.checked === false) {
+          checkbox.checked = true;
+          allRowsSelected = true;
+        }else {
+          checkbox.checked = false;
+          allRowsSelected = false;
+        }
+      }
+
 	    var selectedRows = [];
 	    for (var i = 0; i < this.props.rowsCount; i++) {
 	      selectedRows.push(allRowsSelected);
 	    }
 	    this.setState({ selectedRows: selectedRows });
 	  },
+
+    handleGlobalCheckboxChange: function handleGlobalCheckboxChange(e, selectedRows){
+      var checkbox = this.getDOMNode().querySelector('.react-grid-checkbox');
+      if(checkbox.checked === true) {
+        checkbox.checked = false;
+      }else {
+        var allChecked = true;
+        selectedRows.forEach(function (item) {
+          if (item === false){
+            allChecked = false;
+          }
+        });
+        if (allChecked){
+          checkbox.checked = true;
+        }
+      }
+    },
 
 	  getScrollOffSet: function getScrollOffSet() {
 	    var scrollOffset = 0;
@@ -388,7 +424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      rows.push({
 	        ref: 'filterRow',
 	        headerCellRenderer: React.createElement(FilterableHeaderCell, { onChange: this.props.onAddFilter }),
-	        height: 45
+	        height: 30
 	      });
 	    }
 	    return rows;
@@ -447,20 +483,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  setupGridColumns: function setupGridColumns() {
-	    var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
+      var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
 
 	    var cols = props.columns.slice(0);
 	    var unshiftedCols = {};
-	    if (props.enableRowSelect) {
+	    if (props.enableRowSelect && !this.props.rowSelection || props.rowSelection && props.rowSelection.showCheckbox !== false) {
+	      var headerRenderer = props.enableRowSelect === 'single' ? null : React.createElement(
+	        'div',{
+            className: 'react-grid-checkbox-container',
+            onClick: this.handleCheckboxChange },
+	        React.createElement('input', { className: 'react-grid-checkbox',
+            type: 'checkbox',
+            name: 'select-all-checkbox',
+            id: 'select-all-checkbox',
+            onClick: this.handleCheckboxChange }),
+	        React.createElement('label', {
+            htmlFor: 'select-all-checkbox',
+            className: 'react-grid-checkbox-label' })
+	      );
 	      var selectColumn = {
 	        key: 'select-row',
 	        name: '',
 	        formatter: React.createElement(CheckboxEditor, null),
 	        onCellChange: this.handleRowSelect,
 	        filterable: false,
-	        headerRenderer: React.createElement('input', { type: 'checkbox', onChange: this.handleCheckboxChange }),
-	        width: 60,
-	        locked: true
+	        headerRenderer: headerRenderer,
+	        width: 35,
+	        locked: true,
+          cellClass: 'cell-checkbox',
+	        getRowMetaData: function getRowMetaData(rowData) {
+	          return rowData;
+	        }
 	      };
 	      unshiftedCols = cols.unshift(selectColumn);
 	      cols = unshiftedCols > 0 ? cols : unshiftedCols;
@@ -871,7 +924,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        ref: 'header',
 	        columnMetrics: this.props.columnMetrics,
 	        onColumnResize: this.props.onColumnResize,
-	        height: this.props.rowHeight,
+	        height: 30,
 	        totalWidth: this.props.totalWidth,
 	        headerRows: headerRows,
 	        sortColumn: this.props.sortColumn,
@@ -1046,7 +1099,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var height = 0;
 	    for (var index = 0; index < stopAt; index++) {
-	      height += this.props.headerRows[index].height || this.props.height;
+	      height += this.props.headerRows[index].height || 30;
 	    }
 	    return height;
 	  },
@@ -1519,7 +1572,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  render: function render() {
 	    var cellsStyle = {
 	      width: this.props.width ? this.props.width + getScrollbarSize() : '100%',
-	      height: this.props.height,
+	      height: 30,
 	      whiteSpace: 'nowrap',
 	      overflowX: 'hidden',
 	      overflowY: 'hidden'
@@ -1674,7 +1727,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      display: 'inline-block',
 	      position: 'absolute',
 	      overflow: 'hidden',
-	      height: this.props.height,
+	      height: 30,
 	      margin: 0,
 	      textOverflow: 'ellipsis',
 	      whiteSpace: 'nowrap'
@@ -2980,7 +3033,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      right: 0,
 	      overflow: 'hidden',
 	      position: 'absolute',
-	      top: this.props.rowOffsetHeight
+	      top: 30
 	    };
 	    return React.createElement(
 	      'div',
@@ -3474,7 +3527,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  render: function render() {
-	    var className = joinClasses('react-grid-Row', 'react-grid-Row--' + (this.props.idx % 2 === 0 ? 'even' : 'odd'), { 'row-selected': this.props.isSelected });
+	    var className = joinClasses('react-grid-Row', 'react-grid-Row--' + (this.props.idx % 2 === 0 ? 'even' : 'odd'),
+      { 'row-selected': this.props.isSelected });
 
 	    var style = {
 	      height: this.getRowHeight(this.props),
@@ -3595,7 +3649,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  getFormatter: function getFormatter() {
 	    var col = this.props.column;
 	    if (this.isActive()) {
-	      return React.createElement(EditorContainer, { rowData: this.getRowData(), rowIdx: this.props.rowIdx, idx: this.props.idx, cellMetaData: this.props.cellMetaData, column: col, height: this.props.height });
+	      return React.createElement(EditorContainer, {
+          rowData: this.getRowData(),
+          rowIdx: this.props.rowIdx,
+          idx: this.props.idx,
+          cellMetaData: this.props.cellMetaData,
+          column: col,
+          height: this.props.height,
+          isRowSelected: this.props.isRowSelected,
+        });
 	    }
 
 	    return this.props.column.formatter;
@@ -3826,7 +3888,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      onCommit: React.PropTypes.func
 	    }).isRequired,
 	    column: React.PropTypes.object.isRequired,
-	    height: React.PropTypes.number.isRequired
+	    height: React.PropTypes.number.isRequired,
+      isRowSelected: React.PropTypes.bool,
 	  },
 
 	  changeCommitted: false,
@@ -3866,7 +3929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      rowMetaData: this.getRowMetaData(),
 	      height: this.props.height,
 	      onBlur: this.commit,
-	      onOverrideKeyDown: this.onKeyDown
+	      onOverrideKeyDown: this.onKeyDown,
 	    };
 
 	    var customEditor = this.props.column.editor;
@@ -3987,7 +4050,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var updated = this.getEditor().getValue();
 	    if (this.isNewValueValid(updated)) {
 	      var cellKey = this.props.column.key;
-	      this.props.cellMetaData.onCommit({ cellKey: cellKey, rowIdx: this.props.rowIdx, updated: updated, key: opts.key });
+        var selected = this.props.cellMetaData.selected.active;
+	      this.props.cellMetaData.onCommit({
+          cellKey: cellKey,
+          rowIdx: this.props.rowIdx,
+          updated: updated,
+          key: opts.key,
+          rowSelected: this.props.isRowSelected,
+        });
 	    }
 
 	    this.changeCommitted = true;
@@ -4884,8 +4954,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: React.PropTypes.bool.isRequired,
 	    rowIdx: React.PropTypes.number.isRequired,
 	    column: React.PropTypes.shape({
-	      key: React.PropTypes.string.isRequired,
-	      onCellChange: React.PropTypes.func.isRequired
+	    key: React.PropTypes.string.isRequired,
+	    onCellChange: React.PropTypes.func.isRequired
 	    }).isRequired
 	  },
 
@@ -4893,9 +4963,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.props.column.onCellChange(this.props.rowIdx, this.props.column.key, e);
 	  },
 
-	  render: function render() {
+    render: function render() {
 	    var checked = this.props.value != null ? this.props.value : false;
-	    return React.createElement("input", { className: "react-grid-CheckBox", type: "checkbox", checked: checked, onClick: this.handleChange, onChange: this.handleChange });
+	    var checkboxName = 'checkbox' + this.props.rowIdx;
+	    return React.createElement(
+	      'div',
+	      { className: 'react-grid-checkbox-container', onClick: this.handleChange },
+	      React.createElement('input', { className: 'react-grid-checkbox', type: 'checkbox', name: checkboxName, checked: checked }),
+	      React.createElement('label', { htmlFor: checkboxName, className: 'react-grid-checkbox-label' })
+	    );
 	  }
 	});
 

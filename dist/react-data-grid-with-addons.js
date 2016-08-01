@@ -107,6 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    minWidth: React.PropTypes.number,
 	    enableRowSelect: React.PropTypes.bool,
 	    onRowUpdated: React.PropTypes.func,
+      onRowSelect: React.PropTypes.func,
 	    rowGetter: React.PropTypes.func.isRequired,
 	    rowsCount: React.PropTypes.number.isRequired,
 	    toolbar: React.PropTypes.element,
@@ -346,11 +347,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        _selectedRows[rowIdx] = false;
 	      }
 	      this.setState({ selectedRows: _selectedRows });
-        if (this.props.onRowSelect) {
-	        this.props.onRowSelect(_selectedRows.filter(function (r) {
-	          return r.isSelected === true;
-	        }));
-	      }
 	    }
 	  },
 
@@ -5314,7 +5310,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		  },
 
 		  getDefaultProps: function () {
-		    return { search: searchArray };
+		    return { search: searchArray};
 		  },
 
 		  getInitialState: function () {
@@ -5348,7 +5344,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		      className: className,
 		      onFocus: this.onFocus,
 		      onBlur: this.onBlur,
-		      style: style }, React.createElement("input", {
+		      style: style },
+          React.createElement("input", {
 		      ref: "search",
 		      className: "react-autocomplete-Autocomplete__search",
 		      style: { width: "100%" },
@@ -5357,7 +5354,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		      onFocus: this.showAllResults,
 		      onBlur: this.onQueryBlur,
 		      onKeyDown: this.onQueryKeyDown,
-		      value: this.state.searchTerm }), React.createElement(Results, {
+		      value: this.state.searchTerm }), React.createElement("div", {
+          className: 'react-autocomplete-Autocomplete-icon-input-wrapper'},
+          React.createElement("div", {
+          className: 'aui-core-icon aui-icon-arrowDownSlim'})),
+          React.createElement(Results, {
 		      className: "react-autocomplete-Autocomplete__results",
 		      onSelect: this.onValueChange,
 		      onFocus: this.onValueFocus,
@@ -5571,13 +5572,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		      // we update ignoreFocus to true if we change the scroll position so
 		      // the mouseover event triggered because of that won't have an
 		      // effect
-		      /* if (top < scroll) {
+		      if (top < scroll) {
 		        this.ignoreFocus = true;
 		        containerNode.scrollTop = top;
 		      } else if (bottom - scroll > height) {
 		        this.ignoreFocus = true;
 		        containerNode.scrollTop = bottom - height;
-		      }*/
+		      }
 		    }
 		  },
 
@@ -5619,7 +5620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    if (typeof this.props.label === "function") {
 		      return this.props.label(result);
 		    } else if (typeof this.props.label === "string") {
-		      return result[this.props.label];
+		      return result.match;
 		    }
 		  },
 
@@ -5633,7 +5634,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		      style: { listStyleType: "none" },
 		      className: className,
 		      onClick: this.onClick,
-		      onMouseEnter: this.onMouseEnter }, React.createElement("a", null, this.getLabel(this.props.result)));
+		      onMouseEnter: this.onMouseEnter }, React.createElement("a", {dangerouslySetInnerHTML: {__html: this.getLabel(this.props.result)}}));
 		  },
 
 		  onClick: function () {
@@ -5646,9 +5647,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		    }
 		  },
 
-		  shouldComponentUpdate: function (nextProps) {
+		  /*shouldComponentUpdate: function (nextProps) {
 		    return nextProps.result.id !== this.props.result.id || nextProps.focused !== this.props.focused;
-		  }
+		  }*/
 		});
 
 		/**
@@ -5663,13 +5664,26 @@ return /******/ (function(modules) { // webpackBootstrap
 		  if (!options) {
 		    return cb(null, []);
 		  }
-
+      var textToSearch = searchTerm;
+      // limpiar label de código html
+      for (var i = 0, len = options.length; i < len; i++) {
+        if(options[i].match) {
+          options[i].match = options[i].match.replace(/<[^>]*>/gi, '');
+        }else {
+          break;
+        }
+      }
 		  searchTerm = new RegExp(searchTerm, "i");
 
 		  var results = [];
 
 		  for (var i = 0, len = options.length; i < len; i++) {
 		    if (searchTerm.exec(options[i].title)) {
+          const matchPosition = options[i].title.toLowerCase().indexOf(textToSearch.toLowerCase());
+          if (matchPosition !== -1) {
+            const match = options[i].title.substr(0, matchPosition) + '<strong>' + options[i].title.substr(matchPosition, textToSearch.length) + '</strong>' + options[i].title.substr(matchPosition + textToSearch.length);
+            options[i].match = match;
+          }
 		      results.push(options[i]);
 		    }
 		  }
