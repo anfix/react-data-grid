@@ -351,7 +351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      this.setState({ selectedRows: _selectedRows });
         if (this.props.onRowSelect) {
-	        this.props.onRowSelect(_selectedRows);
+	        this.props.onRowSelect(_selectedRows, rowIdx);
 	      }
 	    }
 	  },
@@ -382,6 +382,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      selectedRows.push(allRowsSelected);
 	    }
 	    this.setState({ selectedRows: selectedRows });
+      if (this.props.onRowSelect) {
+        this.props.onRowSelect(selectedRows);
+      }
 	  },
 
     handleGlobalCheckboxChange: function handleGlobalCheckboxChange(e, selectedRows){
