@@ -3933,6 +3933,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      height: this.props.height,
 	      onBlur: this.commit,
 	      onOverrideKeyDown: this.onKeyDown,
+				valueParams: this.props.column.valueParams,
+				label: this.props.column.label,
 	    };
 
 	    var customEditor = this.props.column.editor;
