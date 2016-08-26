@@ -5177,12 +5177,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value = this.constuctValueFromParams(this.refs.autoComplete.state.focusedValue, this.props.valueParams);
 	      }
 	    } else {
-	      value = this.refs.autoComplete.state.searchTerm;
+	      value = null;
 	    }
 
 	    updated[this.props.column.key] = value;
 	    return updated;
 	  },
+
+		getValueObject: function getValueObject() {
+	    var value = undefined;
+	    var updatedObject = {};
+	    if (this.hasResults() && this.isFocusedOnSuggestion()) {
+	      value = this.refs.autoComplete.state.focusedValue;
+	    } else {
+	      value = [];
+	    }
+
+	    updatedObject[this.props.column.key] = value;
+	    return updatedObject;
+	  },
+
 
 	  getInputNode: function getInputNode() {
 	    return this.getDOMNode().getElementsByTagName('input')[0];
