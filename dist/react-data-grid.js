@@ -3933,6 +3933,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      height: this.props.height,
 	      onBlur: this.commit,
 	      onOverrideKeyDown: this.onKeyDown,
+				label: this.props.column.label,
 	    };
 
 	    var customEditor = this.props.column.editor;
@@ -4051,6 +4052,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  commit: function commit(args) {
 	    var opts = args || {};
 	    var updated = this.getEditor().getValue();
+			var isAutoCompleteEditor = (this.getEditor().getValueObject) ? true : false;
+			var updatedObject = (isAutoCompleteEditor) ? this.getEditor().getValueObject() : [];
 	    if (this.isNewValueValid(updated)) {
 	      var cellKey = this.props.column.key;
         var selected = this.props.cellMetaData.selected.active;
@@ -4058,6 +4061,8 @@ return /******/ (function(modules) { // webpackBootstrap
           cellKey: cellKey,
           rowIdx: this.props.rowIdx,
           updated: updated,
+					isAutoCompleteEditor: isAutoCompleteEditor,
+					updatedObject: updatedObject,
           key: opts.key,
           rowSelected: this.props.isRowSelected,
         });
