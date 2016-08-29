@@ -5155,7 +5155,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    column: React.PropTypes.shape(ExcelColumn).isRequired,
 	    resultIdentifier: React.PropTypes.string,
 	    search: React.PropTypes.string,
-	    onKeyDown: React.PropTypes.func
+	    onKeyDown: React.PropTypes.func,
+			onfilterOptions: React.PropTypes.func,
 	  },
 
 	  getDefaultProps: function getDefaultProps() {
@@ -5165,7 +5166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  handleChange: function handleChange() {
-	    this.props.onCommit();
+	    this.props.onCommit;
 	  },
 
 	  getValue: function getValue() {
@@ -5232,12 +5233,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return ret.join('|');
 	  },
 
+		getValidOptions: function getValidOptions() {
+			var options = this.props.options;
+			if (this.props.onfilterOptions) {
+				options = this.props.onfilterOptions(this.props.options, this.props.rowData);
+			}
+			return options;
+		},
+
 	  render: function render() {
 	    var label = this.props.label != null ? this.props.label : 'title';
+			var options = this.getValidOptions();
 	    return React.createElement(
 	      'div',
 	      { height: this.props.height, onKeyDown: this.props.onKeyDown },
-	      React.createElement(ReactAutocomplete, { search: this.props.search, ref: 'autoComplete', label: label, onChange: this.handleChange, resultIdentifier: this.props.resultIdentifier, options: this.props.options, value: { title: this.props.value } })
+	      React.createElement(ReactAutocomplete, { search: this.props.search, ref: 'autoComplete', label: label, onChange: this.handleChange, resultIdentifier: this.props.resultIdentifier, options: options, value: { title: this.props.value } })
 	    );
 	  }
 	});
@@ -5320,7 +5330,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		    resultRenderer: React.PropTypes.oneOfType([React.PropTypes.component, React.PropTypes.func]),
 		    value: React.PropTypes.object,
 		    onChange: React.PropTypes.func,
-		    onError: React.PropTypes.func
+		    onError: React.PropTypes.func,
+				rowData: React.PropTypes.object,
 		  },
 
 		  getDefaultProps: function () {
