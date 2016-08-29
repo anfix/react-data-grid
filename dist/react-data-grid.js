@@ -154,11 +154,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _idx = selected.idx;
 	        var _rowIdx = selected.rowIdx;
 	        if (_idx >= 0 && _rowIdx >= 0 && _idx < ColumnUtils.getSize(this.state.columnMetrics.columns) && _rowIdx < this.props.rowsCount) {
+						selected = this.findNextSelectable(selected);
+
 	          this.setState({ selected: selected });
 	        }
 	      }
 	    }
 	  },
+
+		findNextSelectable: function findNextSelectable(selected) {
+			let selectedCell = selected;
+			if(!this.props.columns[selected.idx - 1].editable) {
+				const restColumns = this.props.columns.slice(selected.idx);
+				let findEditableColumn = restColumns.find((column, index) => {
+					selectedCell = {rowIdx: selected.rowIdx, idx: index + selected.idx};
+					return column.editable === true;
+				});
+				if(!findEditableColumn && (this.props.rowsCount > selected.rowIdx + 1)) {
+					findEditableColumn = this.props.columns.find((column, index) => {
+						selectedCell = {rowIdx: selected.rowIdx + 1, idx: index};
+						return column.editable === true;
+					});
+				} else {
+					selectedCell = this.state.selected;
+				}
+
+			}
+			return selectedCell;
+		},
 
 	  onCellClick: function onCellClick(cell) {
 	    this.onSelect({ rowIdx: cell.rowIdx, idx: cell.idx });
@@ -3934,6 +3957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      onBlur: this.commit,
 	      onOverrideKeyDown: this.onKeyDown,
 				label: this.props.column.label,
+				rowData: this.props.rowData,
 	    };
 
 	    var customEditor = this.props.column.editor;
