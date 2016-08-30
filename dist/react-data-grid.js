@@ -148,37 +148,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  },
 
-	  onSelect: function onSelect(selected) {
+	  onSelect: function onSelect(selected, direction) {
 	    if (this.props.enableCellSelect) {
 	      if (this.state.selected.rowIdx !== selected.rowIdx || this.state.selected.idx !== selected.idx || this.state.selected.active === false) {
 	        var _idx = selected.idx;
 	        var _rowIdx = selected.rowIdx;
 	        if (_idx >= 0 && _rowIdx >= 0 && _idx < ColumnUtils.getSize(this.state.columnMetrics.columns) && _rowIdx < this.props.rowsCount) {
-						selected = this.findNextSelectable(selected);
-
+						selected = this.findNextSelectable(selected, direction);
+						console.log('SELECTED', selected);
 	          this.setState({ selected: selected });
 	        }
 	      }
 	    }
 	  },
 
-		findNextSelectable: function findNextSelectable(selected) {
+		findNextSelectable: function findNextSelectable(selected, direction) {
 			let selectedCell = selected;
-			if(!this.props.columns[selected.idx - 1].editable) {
-				const restColumns = this.props.columns.slice(selected.idx);
-				let findEditableColumn = restColumns.find((column, index) => {
-					selectedCell = {rowIdx: selected.rowIdx, idx: index + selected.idx};
-					return column.editable === true;
-				});
-				if(!findEditableColumn && (this.props.rowsCount > selected.rowIdx + 1)) {
-					findEditableColumn = this.props.columns.find((column, index) => {
-						selectedCell = {rowIdx: selected.rowIdx + 1, idx: index};
+			if (direction) {
+				let initIndex = selected.idx - 1;
+				let finalIndex = this.props.columns.length;
+				let rowIndex = selected.rowIdx + 1;
+				if (direction === 'left') {
+					initIndex = 0;
+					finalIndex = selected.idx;
+					rowIndex = selected.rowIdx - 1;
+				}
+				if (!this.props.columns[selected.idx - 1].editable) {
+					const restColumns = this.props.columns.slice(initIndex, finalIndex);
+					let findEditableColumn = restColumns.find((column, index) => {
+						selectedCell = {rowIdx: selected.rowIdx, idx: index + selected.idx};
 						return column.editable === true;
 					});
-				} else {
-					selectedCell = this.state.selected;
-				}
+					if (!findEditableColumn && ((direction === 'left' && selected.rowIdx !== 0) || (direction === 'right' && this.props.rowsCount > selected.rowIdx + 1))) {
+						findEditableColumn = this.props.columns.find((column, index) => {
+							selectedCell = {rowIdx: rowIndex, idx: (direction === 'left') ? this.props.columns.length - 2: index + 1};
+							return column.editable === true;
+						});
+					} else if (!findEditableColumn) {
+						selectedCell = this.state.selected;
+					}
 
+				}
 			}
 			return selectedCell;
 		},
@@ -205,15 +215,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  onPressArrowLeft: function onPressArrowLeft(e) {
-	    this.moveSelectedCell(e, 0, -1);
+	    this.moveSelectedCell(e, 0, -1, 'left');
 	  },
 
 	  onPressArrowRight: function onPressArrowRight(e) {
-	    this.moveSelectedCell(e, 0, 1);
+	    this.moveSelectedCell(e, 0, 1, 'right');
 	  },
 
 	  onPressTab: function onPressTab(e) {
-	    this.moveSelectedCell(e, 0, e.shiftKey ? -1 : 1);
+	    this.moveSelectedCell(e, 0, e.shiftKey ? -1 : 1, e.shiftKey ? 'left' : 'right');
 	  },
 
 	  onPressEnter: function onPressEnter(e) {
@@ -472,13 +482,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return RowUtils.get(row, cellKey);
 	  },
 
-	  moveSelectedCell: function moveSelectedCell(e, rowDelta, cellDelta) {
+	  moveSelectedCell: function moveSelectedCell(e, rowDelta, cellDelta, direction) {
 	    // we need to prevent default as we control grid scroll
 	    // otherwise it moves every time you left/right which is janky
 	    e.preventDefault();
 	    var rowIdx = this.state.selected.rowIdx + rowDelta;
 	    var idx = this.state.selected.idx + cellDelta;
-	    this.onSelect({ idx: idx, rowIdx: rowIdx });
+	    this.onSelect({ idx: idx, rowIdx: rowIdx }, direction);
 	  },
 
 	  setActive: function setActive(keyPressed) {
