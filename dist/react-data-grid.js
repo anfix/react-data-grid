@@ -155,7 +155,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _rowIdx = selected.rowIdx;
 	        if (_idx >= 0 && _rowIdx >= 0 && _idx < ColumnUtils.getSize(this.state.columnMetrics.columns) && _rowIdx < this.props.rowsCount) {
 						selected = this.findNextSelectable(selected, direction);
-						console.log('SELECTED', selected);
 	          this.setState({ selected: selected });
 	        }
 	      }
