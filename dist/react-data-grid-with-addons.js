@@ -5345,7 +5345,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		      showResults: false,
 		      showResultsInProgress: false,
 		      searchTerm: searchTerm,
-		      focusedValue: null
+		      focusedValue: null,
+					dropdownClassName: "react-autocomplete-Autocomplete__results"
 		    };
 		  },
 
@@ -5364,14 +5365,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		      position: "relative",
 		      outline: "none"
 		    };
-				var element = (this.refs.search) ? this.refs.search.getDOMNode() : null;
-				var dropdownClassName = "react-autocomplete-Autocomplete__results";
-				if (element) {
-					var windowHeight = window.innerHeight
-									|| document.documentElement.clientHeight
-									|| document.body.clientHeight;
-					if (element.getBoundingClientRect().bottom + 200 + 34 > windowHeight) dropdownClassName = "react-autocomplete-Autocomplete__results react-autocomplete-Autocomplete-top";
-				}
+
 		    return React.createElement("div", {
 		      tabIndex: "1",
 		      className: className,
@@ -5392,7 +5386,7 @@ return /******/ (function(modules) { // webpackBootstrap
           React.createElement("div", {
           className: 'aui-core-icon aui-icon-arrowDownSlim'})),
           React.createElement(Results, {
-		      className: dropdownClassName,
+		      className: this.state.dropdownClassName,
 		      onSelect: this.onValueChange,
 		      onFocus: this.onValueFocus,
 		      results: this.state.results,
@@ -5428,6 +5422,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		    if (!this.state.showResultsInProgress && !this.state.showResults) {
 		      this.showResults("");
 		    }
+				var element = (this.refs.search) ? this.refs.search.getDOMNode() : null;
+				var dropdownClassName = "react-autocomplete-Autocomplete__results";
+				if (element) {
+					var windowHeight = window.innerHeight
+									|| document.documentElement.clientHeight
+									|| document.body.clientHeight;
+					if (element.getBoundingClientRect().bottom + 200 + 34 > windowHeight) {
+						this.setState({
+							dropdownClassName: "react-autocomplete-Autocomplete__results react-autocomplete-Autocomplete-top",
+						});
+					}
+				}
 		  },
 
 		  onValueChange: function (value) {
