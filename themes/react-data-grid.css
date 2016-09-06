@@ -373,6 +373,10 @@ textarea.react-autocomplete-Autocomplete__search {
   max-height: 200px;
   overflow: auto;
 }
+.react-autocomplete-Autocomplete__results.react-autocomplete-Autocomplete-top {
+  top: 0;
+  bottom: 100%;
+}
 .react-autocomplete-Autocomplete__results.pull-right {
   right: 0;
   left: auto;
