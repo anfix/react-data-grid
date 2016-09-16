@@ -852,7 +852,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  getStyle: function getStyle() {
 	    return {
-	      overflow: 'hidden',
 	      outline: 0,
 	      position: 'relative',
 	      minHeight: this.props.minHeight
@@ -2977,7 +2976,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      bottom: 0,
 	      left: 0,
 	      right: 0,
-	      overflow: 'hidden',
 	      position: 'absolute',
 	      top: this.props.rowOffsetHeight
 	    };
@@ -3239,8 +3237,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      position: 'absolute',
 	      top: 0,
 	      left: 0,
-	      overflowX: 'auto',
-	      overflowY: 'scroll',
 	      width: this.props.totalWidth + this.state.scrollbarWidth,
 	      height: this.props.height,
 	      transform: 'translate3d(0, 0, 0)'
@@ -3254,7 +3250,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        className: joinClasses('react-grid-Canvas', this.props.className, { opaque: this.props.cellMetaData.selected && this.props.cellMetaData.selected.active }) },
 	      React.createElement(
 	        'div',
-	        { style: { width: this.props.width, overflow: 'hidden' } },
+	        { style: { width: this.props.width } },
 	        rows
 	      )
 	    );
@@ -3477,7 +3473,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var style = {
 	      height: this.getRowHeight(this.props),
-	      overflow: 'hidden'
 	    };
 
 	    var cells = this.getCells();
@@ -5166,7 +5161,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  handleChange: function handleChange() {
-	    this.props.onCommit;
+	    if (this.props.onCommit) this.props.onCommit();
 	  },
 
 	  getValue: function getValue() {
