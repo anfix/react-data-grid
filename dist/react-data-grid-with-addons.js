@@ -5185,6 +5185,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var updatedObject = {};
 	    if (this.hasResults() && this.isFocusedOnSuggestion()) {
 	      value = this.refs.autoComplete.state.focusedValue;
+	    } else if (this.hasOneResult() && !this.isFocusedOnSuggestion()) {
+	      value = this.refs.autoComplete.state.results[0];
+				this.refs.autoComplete.onValueFocus(value);
 	    } else {
 	      value = [];
 	    }
@@ -5209,6 +5212,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  hasResults: function hasResults() {
 	    return this.refs.autoComplete.state.results.length > 0;
+	  },
+
+		hasOneResult: function hasOneResult() {
+			if (this.refs.autoComplete.state.results.length === 1) {
+				return true;
+			} else {
+				return false;
+			}
 	  },
 
 	  isFocusedOnSuggestion: function isFocusedOnSuggestion() {
