@@ -195,6 +195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  onCellClick: function onCellClick(cell) {
 	    this.onSelect({ rowIdx: cell.rowIdx, idx: cell.idx });
+	    setTimeout(() => { this.setActive('Enter');});
 	  },
 
 	  onCellDoubleClick: function onCellDoubleClick(cell) {
