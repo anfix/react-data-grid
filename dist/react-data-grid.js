@@ -195,7 +195,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  onCellClick: function onCellClick(cell) {
 	    this.onSelect({ rowIdx: cell.rowIdx, idx: cell.idx });
-	    setTimeout(() => { this.setActive('Enter');});
+			// La activamos si no lo está.
+			const selected = this.state.selected;
+			if (selected.rowIdx !== cell.rowIdx || selected.idx !== cell.idx) {
+	    	setTimeout(() => { this.setActive('Enter');});
+			}
 	  },
 
 	  onCellDoubleClick: function onCellDoubleClick(cell) {
