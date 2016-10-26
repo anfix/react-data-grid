@@ -3298,9 +3298,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  render: function render() {
 	    var _this = this;
-
-	    var displayStart = this.state.displayStart;
-	    var displayEnd = this.state.displayEnd;
+			// Eso no nos interesa, además con el desplegable abierto no funciona bien.
+			// Elimina filas cuando el scroll se hace sobre el desplegable
+	    // var displayStart = this.state.displayStart;
+	    // var displayEnd = this.state.displayEnd;
+			var displayStart = 0;
+	    var displayEnd = this.props.rowsCount;
 	    var rowHeight = this.props.rowHeight;
 	    var length = this.props.rowsCount;
 
