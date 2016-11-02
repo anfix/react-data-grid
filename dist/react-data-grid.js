@@ -398,13 +398,14 @@ return /******/ (function(modules) { // webpackBootstrap
       e.stopPropagation();
 	    var allRowsSelected = undefined;
       var container = e.currentTarget;
-      if (container.className === 'react-grid-checkbox') {
+			const containerClassName = container.className;
+      if (containerClassName === 'react-grid-checkbox') {
         if (e.currentTarget.checked === true) {
   	      allRowsSelected = true;
   	    } else {
   	      allRowsSelected = false;
   	    }
-      }else if (container.className === 'react-grid-checkbox-container') {
+      }else if (containerClassName === 'react-grid-checkbox-container') {
         var checkbox = e.currentTarget.childNodes[0];
         if(checkbox.checked === false) {
           checkbox.checked = true;
@@ -420,7 +421,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      selectedRows.push(allRowsSelected);
 	    }
 	    this.setState({ selectedRows: selectedRows });
-      if (this.props.onRowSelect) {
+			if ((containerClassName === 'react-grid-checkbox') && this.props.onAllRowSelect) {
+				this.props.onAllRowSelect(allRowsSelected);
+			} else if (this.props.onRowSelect) {
         this.props.onRowSelect(selectedRows);
       }
 	  },
