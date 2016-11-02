@@ -2955,7 +2955,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  onScroll: function onScroll(scroll) {
-	    this.updateScroll(scroll.scrollTop, scroll.scrollLeft, this.state.height, this.props.rowHeight, this.props.rowsCount);
+	    // this.updateScroll(scroll.scrollTop, scroll.scrollLeft, this.state.height, this.props.rowHeight, this.props.rowsCount);
 
 	    if (this.props.onScroll) {
 	      this.props.onScroll({ scrollTop: scroll.scrollTop, scrollLeft: scroll.scrollLeft });
