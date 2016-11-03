@@ -377,21 +377,60 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // columnKey not used here as this function will select the whole row,
 	  // but needed to match the function signature in the CheckboxEditor
 	  handleRowSelect: function handleRowSelect(rowIdx, columnKey, e) {
-	    e.stopPropagation();
-	    if (this.state.selectedRows !== null && this.state.selectedRows.length > 0) {
-	      var _selectedRows = this.state.selectedRows.slice();
-	      if (_selectedRows[rowIdx] === null || _selectedRows[rowIdx] === false) {
-	        _selectedRows[rowIdx] = true;
-          this.handleGlobalCheckboxChange(e, _selectedRows);
-	      } else {
-	        _selectedRows[rowIdx] = false;
-          this.handleGlobalCheckboxChange(e, _selectedRows);
-	      }
-	      this.setState({ selectedRows: _selectedRows });
-        if (this.props.onRowSelect) {
-	        this.props.onRowSelect(_selectedRows, rowIdx);
-	      }
-	    }
+      e.stopPropagation();
+     if (this.state.selectedRows !== null && this.state.selectedRows.length > 0) {
+          var _selectedRows = this.state.selectedRows.slice();
+       if (_selectedRows[rowIdx] === null || _selectedRows[rowIdx] === false) {
+            if (e.shiftKey) {
+              let firstTrue = -1;
+              for(var i = 0; i < _selectedRows.length; i++){
+                if(_selectedRows[i] === true){
+                  firstTrue = i;
+                  break;
+                }
+              };
+              let lastTrue = -1;
+              for(var i = 0; i < _selectedRows.length; i++){
+                if(_selectedRows[i] === true){
+                  lastTrue = i;
+                }
+              };
+              if (firstTrue > rowIdx) {
+                firstTrue = rowIdx;
+                _selectedRows.forEach(function(item, index){
+                  if(firstTrue <= index && index <= lastTrue){
+                    _selectedRows[index] = true;
+                  }
+                });
+              }else{
+                _selectedRows.forEach(function(item, index){
+                  if(firstTrue <= index && index <= rowIdx){
+                    _selectedRows[index] = true;
+                  }
+                });
+              }
+              this.handleGlobalCheckboxChange(e, _selectedRows);
+              this.setState({ selectedRows: _selectedRows });
+              if (this.props.onShiftRowSelect) {
+                this.props.onShiftRowSelect(_selectedRows);
+              }
+            }else{
+              _selectedRows[rowIdx] = true;
+              this.handleGlobalCheckboxChange(e, _selectedRows);
+              this.setState({ selectedRows: _selectedRows });
+              if (this.props.onRowSelect) {
+             this.props.onRowSelect(_selectedRows, rowIdx);
+           }
+            }
+       } else {
+         _selectedRows[rowIdx] = false;
+            this.handleGlobalCheckboxChange(e, _selectedRows);
+            this.setState({ selectedRows: _selectedRows });
+            if (this.props.onRowSelect) {
+           this.props.onRowSelect(_selectedRows, rowIdx);
+         }
+       }
+     }
 	  },
 
 	  handleCheckboxChange: function handleCheckboxChange(e, uncheckGlobal) {
