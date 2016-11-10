@@ -379,7 +379,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  handleRowSelect: function handleRowSelect(rowIdx, columnKey, e) {
       e.stopPropagation();
      if (this.state.selectedRows !== null && this.state.selectedRows.length > 0) {
-          var _selectedRows = this.state.selectedRows.slice();
+          var _selectedRows = this.props.selectedRows.slice();
        if (_selectedRows[rowIdx] === null || _selectedRows[rowIdx] === false) {
             if (e.shiftKey) {
               let firstTrue = -1;
