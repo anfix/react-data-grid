@@ -174,7 +174,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					rowIndex = selected.rowIdx - 1;
 				}
 				if (!this.props.columns[selected.idx - 1].editable) {
-					const restColumns = this.props.columns.slice(initIndex, finalIndex);
+					var restColumns = this.props.columns.slice(initIndex, finalIndex);
 					var findEditableColumn = restColumns.find(function (column, index) {
 						selectedCell = {rowIdx: selected.rowIdx, idx: index + selected.idx};
 						return column.editable === true;
@@ -196,7 +196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  onCellClick: function onCellClick(cell) {
 	    this.onSelect({ rowIdx: cell.rowIdx, idx: cell.idx });
 			// La activamos si no lo está.
-			const selected = this.state.selected;
+			var selected = this.state.selected;
 			if (selected.rowIdx !== cell.rowIdx || selected.idx !== cell.idx) {
 	    	setTimeout(function () { this.setActive('Enter');});
 			}
@@ -437,7 +437,7 @@ return /******/ (function(modules) { // webpackBootstrap
       e.stopPropagation();
 	    var allRowsSelected = undefined;
       var container = e.currentTarget;
-			const containerClassName = container.className;
+			var containerClassName = container.className;
       if (containerClassName === 'react-grid-checkbox') {
         if (e.currentTarget.checked === true) {
   	      allRowsSelected = true;
