@@ -5724,9 +5724,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		  for (var i = 0, len = options.length; i < len; i++) {
 		    if (searchTerm.exec(options[i].title)) {
-          const matchPosition = options[i].title.toLowerCase().indexOf(textToSearch.toLowerCase());
+          var matchPosition = options[i].title.toLowerCase().indexOf(textToSearch.toLowerCase());
           if (matchPosition !== -1) {
-            const match = options[i].title.substr(0, matchPosition) + '<strong>' + options[i].title.substr(matchPosition, textToSearch.length) + '</strong>' + options[i].title.substr(matchPosition + textToSearch.length);
+            var match = options[i].title.substr(0, matchPosition) + '<strong>' + options[i].title.substr(matchPosition, textToSearch.length) + '</strong>' + options[i].title.substr(matchPosition + textToSearch.length);
             options[i].match = match;
           }
 		      results.push(options[i]);

@@ -163,11 +163,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 		findNextSelectable: function findNextSelectable(selected, direction) {
-			let selectedCell = selected;
+			var selectedCell = selected;
 			if (direction) {
-				let initIndex = selected.idx - 1;
-				let finalIndex = this.props.columns.length;
-				let rowIndex = selected.rowIdx + 1;
+				var initIndex = selected.idx - 1;
+				var finalIndex = this.props.columns.length;
+				var rowIndex = selected.rowIdx + 1;
 				if (direction === 'left') {
 					initIndex = 0;
 					finalIndex = selected.idx;
@@ -175,12 +175,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 				if (!this.props.columns[selected.idx - 1].editable) {
 					const restColumns = this.props.columns.slice(initIndex, finalIndex);
-					let findEditableColumn = restColumns.find((column, index) => {
+					var findEditableColumn = restColumns.find(function (column, index) {
 						selectedCell = {rowIdx: selected.rowIdx, idx: index + selected.idx};
 						return column.editable === true;
 					});
 					if (!findEditableColumn && ((direction === 'left' && selected.rowIdx !== 0) || (direction === 'right' && this.props.rowsCount > selected.rowIdx + 1))) {
-						findEditableColumn = this.props.columns.find((column, index) => {
+						findEditableColumn = this.props.columns.find(function (column, index) {
 							selectedCell = {rowIdx: rowIndex, idx: (direction === 'left') ? this.props.columns.length - 2: index + 1};
 							return column.editable === true;
 						});
@@ -198,7 +198,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			// La activamos si no lo está.
 			const selected = this.state.selected;
 			if (selected.rowIdx !== cell.rowIdx || selected.idx !== cell.idx) {
-	    	setTimeout(() => { this.setActive('Enter');});
+	    	setTimeout(function () { this.setActive('Enter');});
 			}
 	  },
 
@@ -382,14 +382,14 @@ return /******/ (function(modules) { // webpackBootstrap
           var _selectedRows = this.props.selectedRows.slice();
        if (_selectedRows[rowIdx] === null || _selectedRows[rowIdx] === false) {
             if (e.shiftKey) {
-              let firstTrue = -1;
+              var firstTrue = -1;
               for(var i = 0; i < _selectedRows.length; i++){
                 if(_selectedRows[i] === true){
                   firstTrue = i;
                   break;
                 }
               };
-              let lastTrue = -1;
+              var lastTrue = -1;
               for(var i = 0; i < _selectedRows.length; i++){
                 if(_selectedRows[i] === true){
                   lastTrue = i;
