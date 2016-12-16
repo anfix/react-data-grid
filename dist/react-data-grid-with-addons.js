@@ -109,6 +109,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    onRowUpdated: React.PropTypes.func,
       onRowSelect: React.PropTypes.func,
 	    rowGetter: React.PropTypes.func.isRequired,
+			onScrollToRow: React.PropTypes.func,
+			rowToScroll: React.PropTypes.string,
 	    rowsCount: React.PropTypes.number.isRequired,
 	    toolbar: React.PropTypes.element,
 	    enableCellSelect: React.PropTypes.bool,
@@ -512,6 +514,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          headerRows: this.getHeaderRows(),
 	          columnMetrics: this.state.columnMetrics,
 	          rowGetter: this.props.rowGetter,
+						onScrollToRow: this.props.onScrollToRow,
+						rowToScroll: this.props.rowToScroll,
 	          rowsCount: this.props.rowsCount,
 	          rowHeight: this.props.rowHeight,
 	          cellMetaData: cellMetaData,
@@ -817,6 +821,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  propTypes: {
 	    rowGetter: PropTypes.oneOfType([PropTypes.array, PropTypes.func]).isRequired,
+			onScrollToRow: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
+			rowToScroll: PropTypes.string,
 	    columns: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 	    columnMetrics: PropTypes.shape,
 	    minHeight: PropTypes.number,
@@ -885,6 +891,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          rowHeight: this.props.rowHeight,
 	          rowRenderer: this.props.rowRenderer,
 	          rowGetter: this.props.rowGetter,
+						onScrollToRow: this.props.onScrollToRow,
+						rowToScroll: this.props.rowToScroll,
 	          rowsCount: this.props.rowsCount,
 	          selectedRows: this.props.selectedRows,
 	          expandedRows: this.props.expandedRows,
@@ -2943,6 +2951,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    totalWidth: PropTypes.number.isRequired,
 	    columnMetrics: PropTypes.object.isRequired,
 	    rowGetter: PropTypes.oneOfType([PropTypes.array, PropTypes.func]).isRequired,
+			onScrollToRow: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
+			rowToScroll: PropTypes.string,
 	    selectedRows: PropTypes.array,
 	    expandedRows: PropTypes.array,
 	    rowRenderer: PropTypes.func,
@@ -2989,6 +2999,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        totalWidth: this.props.totalWidth,
 	        width: this.props.columnMetrics.width,
 	        rowGetter: this.props.rowGetter,
+					onScrollToRow: this.props.onScrollToRow,
+					rowToScroll: this.props.rowToScroll,
 	        rowsCount: this.props.rowsCount,
 	        selectedRows: this.props.selectedRows,
 	        expandedRows: this.props.expandedRows,
@@ -3043,6 +3055,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    displayEnd: PropTypes.number.isRequired,
 	    rowsCount: PropTypes.number.isRequired,
 	    rowGetter: PropTypes.oneOfType([PropTypes.func.isRequired, PropTypes.array.isRequired]),
+			onScrollToRow: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
+			rowToScroll: PropTypes.string,
 	    expandedRows: PropTypes.array,
 	    onRows: PropTypes.func,
 	    onScroll: PropTypes.func,
@@ -3353,6 +3367,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	      height: 35
 	    };
 	  },
+
+		componentDidMount: function componentDidMount() {
+			if (process.env.BROWSER) {
+				if (this.props.rowToScroll === this.props.row.anfixId) {
+					var rowNode = this.getDOMNode();
+					var topPosition = rowNode.getBoundingClientRect().top;
+					var body = window.document.body;
+					this.setVendor(body, 'Transition', 'transform ' + 600 + 'ms ease');
+
+			    this.setVendor(body, 'Transform', 'translateY(' + 0 + 'px)');
+			    body.offsetHeight; // force repaint
+			    window.setTimeout(() => {
+			      body.style.cssText = ' ';
+			      body.scrollTop = topPosition - (2 * this.this.props.height);
+			    }, 600);
+					React.findDOMNode(this).firstChild.click();
+					if (this.props.onScrollToRow) this.props.onScrollToRow();
+				}
+			}
+	  },
+
+		setVendor: function(element, property, value) {
+		  element.style['Webkit' + property] = value;
+		  element.style['Moz' + property] = value;
+		  element.style['ms' + property] = value;
+		  element.style['O' + property] = value;
+		},
 
 	  shouldComponentUpdate: function shouldComponentUpdate(nextProps) {
 	    return !ColumnMetrics.sameColumns(this.props.columns, nextProps.columns, ColumnMetrics.sameColumn) || this.doesRowContainSelectedCell(this.props) || this.doesRowContainSelectedCell(nextProps) || this.willRowBeDraggedOver(nextProps) || nextProps.row !== this.props.row || this.hasRowBeenCopied() || this.props.isSelected !== nextProps.isSelected || nextProps.height !== this.props.height;
