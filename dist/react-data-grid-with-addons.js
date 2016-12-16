@@ -2955,7 +2955,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  onScroll: function onScroll(scroll) {
-	    this.updateScroll(scroll.scrollTop, scroll.scrollLeft, this.state.height, this.props.rowHeight, this.props.rowsCount);
+	    // this.updateScroll(scroll.scrollTop, scroll.scrollLeft, this.state.height, this.props.rowHeight, this.props.rowsCount);
 
 	    if (this.props.onScroll) {
 	      this.props.onScroll({ scrollTop: scroll.scrollTop, scrollLeft: scroll.scrollLeft });
@@ -5724,9 +5724,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		  for (var i = 0, len = options.length; i < len; i++) {
 		    if (searchTerm.exec(options[i].title)) {
-          const matchPosition = options[i].title.toLowerCase().indexOf(textToSearch.toLowerCase());
+          var matchPosition = options[i].title.toLowerCase().indexOf(textToSearch.toLowerCase());
           if (matchPosition !== -1) {
-            const match = options[i].title.substr(0, matchPosition) + '<strong>' + options[i].title.substr(matchPosition, textToSearch.length) + '</strong>' + options[i].title.substr(matchPosition + textToSearch.length);
+            var match = options[i].title.substr(0, matchPosition) + '<strong>' + options[i].title.substr(matchPosition, textToSearch.length) + '</strong>' + options[i].title.substr(matchPosition + textToSearch.length);
             options[i].match = match;
           }
 		      results.push(options[i]);

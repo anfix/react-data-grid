@@ -163,24 +163,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 		findNextSelectable: function findNextSelectable(selected, direction) {
-			let selectedCell = selected;
+			var selectedCell = selected;
 			if (direction) {
-				let initIndex = selected.idx - 1;
-				let finalIndex = this.props.columns.length;
-				let rowIndex = selected.rowIdx + 1;
+				var initIndex = selected.idx - 1;
+				var finalIndex = this.props.columns.length;
+				var rowIndex = selected.rowIdx + 1;
 				if (direction === 'left') {
 					initIndex = 0;
 					finalIndex = selected.idx;
 					rowIndex = selected.rowIdx - 1;
 				}
 				if (!this.props.columns[selected.idx - 1].editable) {
-					const restColumns = this.props.columns.slice(initIndex, finalIndex);
-					let findEditableColumn = restColumns.find((column, index) => {
+					var restColumns = this.props.columns.slice(initIndex, finalIndex);
+					var findEditableColumn = restColumns.find(function (column, index) {
 						selectedCell = {rowIdx: selected.rowIdx, idx: index + selected.idx};
 						return column.editable === true;
 					});
 					if (!findEditableColumn && ((direction === 'left' && selected.rowIdx !== 0) || (direction === 'right' && this.props.rowsCount > selected.rowIdx + 1))) {
-						findEditableColumn = this.props.columns.find((column, index) => {
+						findEditableColumn = this.props.columns.find(function (column, index) {
 							selectedCell = {rowIdx: rowIndex, idx: (direction === 'left') ? this.props.columns.length - 2: index + 1};
 							return column.editable === true;
 						});
@@ -196,10 +196,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  onCellClick: function onCellClick(cell) {
 	    this.onSelect({ rowIdx: cell.rowIdx, idx: cell.idx });
 			// La activamos si no lo está.
-			const selected = this.state.selected;
+			var selected = this.state.selected;
 			if (selected.rowIdx !== cell.rowIdx || selected.idx !== cell.idx) {
 				const that = this;
-	    	setTimeout(() => { that.setActive('Enter');});
+	    	setTimeout(function () { that.setActive('Enter');});
 			}
 	  },
 
@@ -378,34 +378,74 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // columnKey not used here as this function will select the whole row,
 	  // but needed to match the function signature in the CheckboxEditor
 	  handleRowSelect: function handleRowSelect(rowIdx, columnKey, e) {
-	    e.stopPropagation();
-	    if (this.state.selectedRows !== null && this.state.selectedRows.length > 0) {
-	      var _selectedRows = this.state.selectedRows.slice();
-	      if (_selectedRows[rowIdx] === null || _selectedRows[rowIdx] === false) {
-	        _selectedRows[rowIdx] = true;
-          this.handleGlobalCheckboxChange(e, _selectedRows);
-	      } else {
-	        _selectedRows[rowIdx] = false;
-          this.handleGlobalCheckboxChange(e, _selectedRows);
-	      }
-	      this.setState({ selectedRows: _selectedRows });
-        if (this.props.onRowSelect) {
-	        this.props.onRowSelect(_selectedRows, rowIdx);
-	      }
-	    }
+      e.stopPropagation();
+     if (this.state.selectedRows !== null && this.state.selectedRows.length > 0) {
+          var _selectedRows = this.props.selectedRows.slice();
+       if (_selectedRows[rowIdx] === null || _selectedRows[rowIdx] === false) {
+            if (e.shiftKey) {
+              var firstTrue = -1;
+              for(var i = 0; i < _selectedRows.length; i++){
+                if(_selectedRows[i] === true){
+                  firstTrue = i;
+                  break;
+                }
+              };
+              var lastTrue = -1;
+              for(var i = 0; i < _selectedRows.length; i++){
+                if(_selectedRows[i] === true){
+                  lastTrue = i;
+                }
+              };
+              if (firstTrue > rowIdx) {
+                firstTrue = rowIdx;
+                _selectedRows.forEach(function(item, index){
+                  if(firstTrue <= index && index <= lastTrue){
+                    _selectedRows[index] = true;
+                  }
+                });
+              }else{
+                _selectedRows.forEach(function(item, index){
+                  if(firstTrue <= index && index <= rowIdx){
+                    _selectedRows[index] = true;
+                  }
+                });
+              }
+              this.handleGlobalCheckboxChange(e, _selectedRows);
+              this.setState({ selectedRows: _selectedRows });
+              if (this.props.onShiftRowSelect) {
+                this.props.onShiftRowSelect(_selectedRows);
+              }
+            }else{
+              _selectedRows[rowIdx] = true;
+              this.handleGlobalCheckboxChange(e, _selectedRows);
+              this.setState({ selectedRows: _selectedRows });
+              if (this.props.onRowSelect) {
+             this.props.onRowSelect(_selectedRows, rowIdx);
+           }
+            }
+       } else {
+         _selectedRows[rowIdx] = false;
+            this.handleGlobalCheckboxChange(e, _selectedRows);
+            this.setState({ selectedRows: _selectedRows });
+            if (this.props.onRowSelect) {
+           this.props.onRowSelect(_selectedRows, rowIdx);
+         }
+       }
+     }
 	  },
 
 	  handleCheckboxChange: function handleCheckboxChange(e, uncheckGlobal) {
       e.stopPropagation();
 	    var allRowsSelected = undefined;
       var container = e.currentTarget;
-      if (container.className === 'react-grid-checkbox') {
+			var containerClassName = container.className;
+      if (containerClassName === 'react-grid-checkbox') {
         if (e.currentTarget.checked === true) {
   	      allRowsSelected = true;
   	    } else {
   	      allRowsSelected = false;
   	    }
-      }else if (container.className === 'react-grid-checkbox-container') {
+      }else if (containerClassName === 'react-grid-checkbox-container') {
         var checkbox = e.currentTarget.childNodes[0];
         if(checkbox.checked === false) {
           checkbox.checked = true;
@@ -421,7 +461,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      selectedRows.push(allRowsSelected);
 	    }
 	    this.setState({ selectedRows: selectedRows });
-      if (this.props.onRowSelect) {
+			if ((containerClassName === 'react-grid-checkbox') && this.props.onAllRowSelect) {
+				this.props.onAllRowSelect(allRowsSelected);
+			} else if (this.props.onRowSelect) {
         this.props.onRowSelect(selectedRows);
       }
 	  },
@@ -3051,7 +3093,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 
 	  onScroll: function onScroll(scroll) {
-	    this.updateScroll(scroll.scrollTop, scroll.scrollLeft, this.state.height, this.props.rowHeight, this.props.rowsCount);
+	    // this.updateScroll(scroll.scrollTop, scroll.scrollLeft, this.state.height, this.props.rowHeight, this.props.rowsCount);
 
 	    if (this.props.onScroll) {
 	      this.props.onScroll({ scrollTop: scroll.scrollTop, scrollLeft: scroll.scrollLeft });
