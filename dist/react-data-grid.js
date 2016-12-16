@@ -198,7 +198,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			// La activamos si no lo está.
 			const selected = this.state.selected;
 			if (selected.rowIdx !== cell.rowIdx || selected.idx !== cell.idx) {
-	    	setTimeout(() => { this.setActive('Enter');});
+				const that = this;
+	    	setTimeout(() => { that.setActive('Enter');});
 			}
 	  },
 
