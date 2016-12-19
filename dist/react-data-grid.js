@@ -3516,29 +3516,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		componentDidMount: function componentDidMount() {
 			if (process.env.BROWSER) {
 				if (this.props.rowToScroll === this.props.row.anfixId) {
-					var rowNode = this.getDOMNode();
-					var topPosition = rowNode.getBoundingClientRect().top;
-					var body = window.document.body;
-					this.setVendor(body, 'Transition', 'transform ' + 600 + 'ms ease');
-
-			    this.setVendor(body, 'Transform', 'translateY(' + 0 + 'px)');
-			    body.offsetHeight; // force repaint
-			    window.setTimeout(() => {
-			      body.style.cssText = ' ';
-			      body.scrollTop = topPosition - (2 * this.this.props.height);
-			    }, 600);
 					React.findDOMNode(this).firstChild.click();
 					if (this.props.onScrollToRow) this.props.onScrollToRow();
 				}
 			}
 	  },
-
-		setVendor: function(element, property, value) {
-		  element.style['Webkit' + property] = value;
-		  element.style['Moz' + property] = value;
-		  element.style['ms' + property] = value;
-		  element.style['O' + property] = value;
-		},
 
 	  shouldComponentUpdate: function shouldComponentUpdate(nextProps) {
 	    return !ColumnMetrics.sameColumns(this.props.columns, nextProps.columns, ColumnMetrics.sameColumn) || this.doesRowContainSelectedCell(this.props) || this.doesRowContainSelectedCell(nextProps) || this.willRowBeDraggedOver(nextProps) || nextProps.row !== this.props.row || this.hasRowBeenCopied() || this.props.isSelected !== nextProps.isSelected || nextProps.height !== this.props.height;
