@@ -200,7 +200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			// La activamos si no lo está.
 			var selected = this.state.selected;
 			if (selected.rowIdx !== cell.rowIdx || selected.idx !== cell.idx) {
-				const that = this;
+				var that = this;
 	    	setTimeout(function () { that.setActive('Enter');});
 			}
 	  },
