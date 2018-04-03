@@ -422,8 +422,9 @@ return /******/ (function(modules) { // webpackBootstrap
               this.handleGlobalCheckboxChange(e, _selectedRows);
               this.setState({ selectedRows: _selectedRows });
               if (this.props.onRowSelect) {
-             this.props.onRowSelect(_selectedRows, rowIdx);
-           }
+		this.onCellClick({rowIdx, idx:0});
+                this.props.onRowSelect(_selectedRows, rowIdx);
+              }
             }
        } else {
          _selectedRows[rowIdx] = false;
