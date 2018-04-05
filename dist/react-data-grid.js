@@ -443,7 +443,8 @@ return /******/ (function(modules) { // webpackBootstrap
       var container = e.currentTarget;
 			var containerClassName = container.className;
       if (containerClassName === 'react-grid-checkbox') {
-        if (e.currentTarget.checked === true) {
+            this.onCellClick({rowIdx: 0, idx:1});
+	    if (e.currentTarget.checked === true) {
   	      allRowsSelected = true;
   	    } else {
   	      allRowsSelected = false;
