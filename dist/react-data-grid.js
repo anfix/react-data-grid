@@ -420,16 +420,16 @@ return /******/ (function(modules) { // webpackBootstrap
             }else{
               _selectedRows[rowIdx] = true;
               this.handleGlobalCheckboxChange(e, _selectedRows);
-              this.setState({ selectedRows: _selectedRows });
+              this.setState({ selectedRows: _selectedRows, selected: {rowIdx, idx: 1}});
               if (this.props.onRowSelect) {
-		this.onCellClick({rowIdx, idx:0});
-                this.props.onRowSelect(_selectedRows, rowIdx);
-              }
+								this.onCellClick({rowIdx, idx:0});
+             		this.props.onRowSelect(_selectedRows, rowIdx);
+           		}
             }
        } else {
          _selectedRows[rowIdx] = false;
             this.handleGlobalCheckboxChange(e, _selectedRows);
-            this.setState({ selectedRows: _selectedRows });
+            this.setState({ selectedRows: _selectedRows, selected: {rowIdx, idx: 0}});
             if (this.props.onRowSelect) {
            this.props.onRowSelect(_selectedRows, rowIdx);
          }
@@ -443,8 +443,8 @@ return /******/ (function(modules) { // webpackBootstrap
       var container = e.currentTarget;
 			var containerClassName = container.className;
       if (containerClassName === 'react-grid-checkbox') {
-            this.onCellClick({rowIdx: 0, idx:1});
-	    if (e.currentTarget.checked === true) {
+				this.onCellClick({rowIdx: 0, idx:1});
+        if (e.currentTarget.checked === true) {
   	      allRowsSelected = true;
   	    } else {
   	      allRowsSelected = false;
