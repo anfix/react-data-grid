@@ -429,7 +429,7 @@ return /******/ (function(modules) { // webpackBootstrap
        } else {
          _selectedRows[rowIdx] = false;
             this.handleGlobalCheckboxChange(e, _selectedRows);
-            this.setState({ selectedRows: _selectedRows, selected: {rowIdx, idx: 0}});
+            this.setState({ selectedRows: _selectedRows, selected: {rowIdx: rowIdx, idx: 0}});
             if (this.props.onRowSelect) {
            this.props.onRowSelect(_selectedRows, rowIdx);
          }
